@@ -1,75 +1,78 @@
 # Global Development Explorer
 
-Interactive Tableau project exploring how **wealth, health and demographics** connect across 230+ countries.
+**How wealth, health and demographics connect across 230+ countries**, an interactive Tableau project with three linked dashboards and a five-page data story.
+
+> Course project: *Mini-Project 3, Advanced Tableau Storytelling & Interactive Analytics*.
 
 ![Overview dashboard](images/01_overview.png)
 
-## Live dashboard
-[View on Tableau Public](PUT-YOUR-TABLEAU-PUBLIC-LINK-HERE)
-
-## Overview
-This project turns a country-level dataset (economy, population, health, energy and communications indicators) into a small analytical product: three linked dashboards and a five-page Tableau Story that ends with three recommendations. It was built as a course project (Advanced Tableau Storytelling & Interactive Analytics) and designed as a portfolio piece.
+**[View the live dashboards on Tableau Public](https://public.tableau.com/views/Book1_17916372636480/Overview)**
 
 ## What's inside
-| Page | What it shows |
-|---|---|
-| **Overview** | KPI cards (life expectancy, GDP per capita, number of countries), a world map driven by an indicator selector, and a Top N bar chart |
-| **Wealth vs Health** | GDP per capita vs life expectancy (log axis, trend line, median reference lines, auto-detected outliers) and a bubble chart of HIV/AIDS prevalence vs life expectancy |
-| **Demographics** | Infant mortality histogram, population treemap and a top-10 fertility chart |
-| **Key Takeaways** | Three recommendations drawn from the analysis |
-| **Story** | 5-page Tableau Story: overview, income vs life expectancy, exceptions, demographics, recommendations |
 
-## Visualization types (6)
-Filled map, scatter plot with trend line, bar chart, histogram, treemap, bubble chart.
+| Dashboard | What it shows |
+|---|---|
+| **Overview** | KPI cards, a world map with a switchable indicator, and a Top N ranking |
+| **Wealth vs Health** | GDP per capita vs life expectancy (quadrants, trend line, flagged outliers) and HIV/AIDS prevalence vs life expectancy |
+| **Demographics** | Infant mortality distribution, population treemap and the countries with the highest fertility |
+| **Key Takeaways** | Three recommendations drawn from the analysis |
+
+A **Tableau Story** (5 pages) walks through the findings in the same order.
 
 ## Interactivity
-- **Parameters:** `Select Indicator` (GDP per Capita / Life Expectancy / Infant Mortality) and `Top N` (5 to 20)
-- **Dashboard actions (3):**
-  - `Map to KPIs`: selecting a country on the map filters the KPI cards
-  - `Income Highlight`: selecting a point highlights its income group across charts
-  - `Histogram to Treemap`: selecting a histogram bar filters the treemap
-- **Navigation buttons** between dashboards
 
-## Calculated fields
-- `Income Group`: buckets countries by GDP per capita into four groups
-- `Selected Indicator Value`: switches the measure based on the parameter
-- `Anomaly Flag`: uses a `FIXED` LOD expression to flag countries with above-median income but life expectancy more than 10 years below the median
-- `Avg Life Expectancy`, `Avg GDP per Capita`, `Countries Count`: KPI measures
+- **Indicator selector**: switch the map and ranking between GDP per capita, life expectancy and infant mortality.
+- **Top N parameter**: show the top 5 to 20 countries.
+- **Map to KPIs**: click a country on the map and the KPI cards show that country.
+- **Income Highlight**: click a point and every country in the same income group is highlighted.
+- **Histogram to Treemap**: click a histogram bar to filter the treemap to those countries.
+- **Navigation buttons** between the dashboards.
+
+## Technical highlights
+
+- 6 visualization types: filled map, scatter plot with trend line, bar chart, histogram, treemap, bubble chart.
+- Parameters: `Select Indicator`, `Top N`.
+- Calculated fields: `Income Group` (GDP per capita bands), `Selected Indicator Value` (driven by the parameter), `Anomaly Flag` (a `FIXED` LOD expression comparing each country with the median GDP per capita and median life expectancy), KPI measures.
+- Fixed 1300 x 800 layout with a consistent design system (navy header, one accent colour, one font family).
 
 ## Key findings
-- GDP per capita and life expectancy are strongly related (about 0.73 correlation after a log transform of GDP).
-- Life expectancy and infant mortality are strongly and negatively related (about -0.89).
-- **South Africa, Botswana and Gabon** break the income pattern: higher income but much shorter life expectancy, driven largely by HIV/AIDS.
+
+- Income and life expectancy move together: the correlation between log GDP per capita and life expectancy is about **0.73**.
+- Life expectancy and infant mortality are strongly negatively correlated (about **-0.89**).
+- Outliers: **South Africa, Botswana and Namibia** have above-median income but life expectancy 10+ years below the median. All three have HIV/AIDS adult prevalence of 21-37%, which is consistent with the gap (Gabon is also flagged, but it sits right at the income median). **Cuba** is the reverse case: low income, high life expectancy.
 - Infant mortality and fertility are highest in the lowest-income countries.
 
+These are descriptive patterns in one snapshot of data, not proof of causation.
+
 ## Screenshots
+
 ![Wealth vs Health](images/02_wealth_vs_health.png)
 ![Demographics](images/03_demographics.png)
 ![Key Takeaways](images/04_key_takeaways.png)
 ![Story](images/05_story.png)
 
-## Repository structure
-```
-global-development-explorer/
-├── README.md
-├── Global_Development_Explorer.twbx   # Tableau packaged workbook (open with Tableau Desktop or Tableau Public)
-├── data/
-│   └── Country_Data_Clean.csv         # cleaned dataset used in the workbook
-└── images/                            # screenshots used in this README
-```
+## How to open the project
 
-## How to open
 1. Download `Global_Development_Explorer.twbx`.
-2. Open it with [Tableau Public](https://public.tableau.com/app/discover) (free) or Tableau Desktop. The data is packaged inside the workbook.
+2. Open it with Tableau Public or Tableau Desktop (the workbook was built with a recent version, 2026.2, so use an up-to-date install).
+3. The data is packaged inside the file, so nothing else is needed.
 
-## Data notes
-- One row per country/territory; it is a **snapshot with no time dimension**, so the "trend" shown is the relationship between two indicators, not a time series.
-- The dataset appears to predate the early 2010s (for example it still lists *Serbia and Montenegro* and *Netherlands Antilles*), so figures should be read as historical, not current.
-- Non-country rows (for example the European Union aggregate) are excluded with a data source filter.
-- A few names were mapped manually in Tableau (Congo, Serbia and Montenegro to Serbia).
+## Data
+
+- **Source:** *Country Data Comparison* (course dataset). One row per country or territory, 45 indicators on economy, demographics and public health.
+- **Cleaning:** the original file used `;` as the delimiter and had a second row of data types, so I removed that row and re-saved it as a standard CSV. An `Entity Type` column marks aggregates (European Union) and rows without population data, and a data source filter keeps only `Country/Territory`. The cleaned file is in [`data/`](data/Country_Data_Clean.csv).
+- **Map matching:** `Congo Republic of the` was matched to Congo and `Serbia and Montenegro` to Serbia.
+
+### Limitations
+
+- The dataset is an **older snapshot** (it still lists entities such as Serbia and Montenegro and the Netherlands Antilles), so the figures are not current and should not be read as today's numbers.
+- It is **cross-sectional**: there is no time dimension, so the "trend" is a relationship between two indicators, not a change over time.
+- Some indicators have many missing values, which is why the dashboards focus on GDP, life expectancy, infant mortality, fertility, population and HIV/AIDS.
 
 ## Tools
-Tableau Public
+
+Tableau Public.
 
 ## Author
+
 Fatima Awad
